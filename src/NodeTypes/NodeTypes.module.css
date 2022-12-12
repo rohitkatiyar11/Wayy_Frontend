@@ -1,0 +1,51 @@
+.node {
+  border: 1px solid #0984e3;
+  border-radius: 4px;
+  box-shadow: rgb(0 0 0 / 8%) 0px 4px 12px;
+  padding: 12px;
+  width: 200px;
+  text-align: center;
+  background: #0984e3;
+  cursor: pointer;
+  line-height: 1.2;
+  border-radius: 100px;
+  font-size: 20px;
+  font-weight: normal;
+  font-family: 'Sora';
+}
+
+.childNode {
+  border: 1px solid #000;
+  border-radius: 4px;
+  box-shadow: rgb(0 0 0 / 8%) 0px 4px 12px;
+  padding: 12px;
+  width: 200px;
+  text-align: center;
+  background: rgba(86, 150, 241, 0.3);
+  cursor: pointer;
+  line-height: 1.2;
+  border-radius: 100px;
+  font-size: 20px;
+  font-weight: normal;
+  font-family: 'Sora';
+}
+
+.node:hover {
+  background: #0984e3;
+}
+
+.content {
+  pointer-events: none;
+}
+
+.handle {
+  visibility: hidden;
+}
+
+.placeholder {
+  width: 200px;
+  background: #fff;
+  border: 1px dashed #bbb;
+  color: #bbb;
+  box-shadow: none;
+}

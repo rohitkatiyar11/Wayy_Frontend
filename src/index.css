@@ -1,0 +1,115 @@
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.subGoal {
+  text-align: left;
+}
+
+.addAction {
+  text-align: right;
+}
+
+.addAction button {
+  font-size: 12px;
+}
+
+.actionsItem {
+  text-align: left;
+  border-left: 4px solid #3e98fb;
+  background: #cfcecc;
+  color: #000000a8;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  font-size: 11px;
+  text-align: left;
+  padding-left: 10px;
+  font-weight: bold;
+}
+
+.actionsItem.inProgress {
+  background: #dbfada !important;
+}
+
+.actionsItem.completed {
+  background: #6d6a73 !important;
+  color: #fff !important;
+}
+
+.actionsMain {
+  text-align: left;
+  cursor: pointer;
+}
+
+.actionsMain b {
+  margin-left: -11px;
+  margin-bottom: 7px;
+}
+
+.actionsMain .it1 {
+  text-decoration: underline;
+}
+
+.actionsMain .it2 {
+  text-decoration: none;
+}
+
+.react-flow__node.selected {
+  border-radius: 105px !important;
+  border: 5px solid #E35249 !important;
+}
+
+.main-goal {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.main-goal img {
+  width: 42px;
+  border: 2px solid #5696F1;
+  border-radius: 62px;
+  background: #fff;
+}
+
+.react-flow__node:focus {
+  outline: none;
+}
+
+.inputNodeMainGoal {
+  width: 100%;
+  outline: none;
+  background-color: #0984e3;
+  border: none;
+}
+
+.inputNodeSubGoal {
+  width: 100%;
+  outline: none;
+  background-color: rgb(86 150 241 / 2%);
+  border: none;
+}
+
+.listView {
+  position: absolute;
+  top: 61px;
+  width: 446px;
+  background: #CCE0FB;
+  box-shadow: 0px 0px 8px 8px rgb(0 0 0 / 25%), 0px 4px 4px rgb(0 0 0 / 25%);
+  border-radius: 8px;
+  height: 220px;
+}

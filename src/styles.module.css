@@ -1,0 +1,72 @@
+.container {
+  display: flex;
+  height: 100%;
+}
+
+.reactFlow {
+  background-color: #5f5d72;
+}
+
+.node {
+  background-color: #222138;
+  color: #fff;
+  border: none;
+  box-shadow: rgba(0, 0, 0, 0.533) 0px 0px 9px 0px;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.nodeDropzone {
+  background-color: #ff0072;
+  box-shadow: 0 0 9px 0 #ff0072;
+  border-radius: 10px;
+}
+
+.handle {
+  pointer-events: none;
+  opacity: 0;
+}
+
+.sidebar {
+  color: #120b0b;
+  top: 5px;
+  left: 5px;
+  z-index: 1000;
+  padding: 10px;
+  border: 1px solid #222138;
+  border-radius: 15px;
+}
+
+.sidebarLabel {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.sidebarNode {
+  border-left: 4px solid #0000006b;
+  background: #ccc;
+  color: #0000007d;
+  padding: 4px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  font-size: 10px;
+  text-align: left;
+  padding-left: 10px;
+  font-weight: 700;
+}
+
+.sidebarNode:hover {
+  box-shadow: rgba(0, 0, 0, 0.533) 0px 0px 9px 0px;
+}
+.dndnode {
+  font-size: 12px;
+  height: 20px;
+  border: 1px solid #1a192b;
+  border-radius: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: grab;
+  border-color: #ff0072;
+}
