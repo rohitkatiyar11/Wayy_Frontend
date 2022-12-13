@@ -19,10 +19,27 @@ const WorkflowNode = ({ id, data, selected }) => {
   const arrowPresses = useKeyPress(["ArrowUp", "ArrowDown", "ArrowRight", "ArrowLeft", "Space"]);
 
   useEffect(() => {
+    if (data?.new) {
+      setTimeout(() => {
+        setNodes((nodes) => {
+          return nodes.map(element => {
+            if (element.data?.new) {
+              element.selected = true;
+              element.data.new = false
+            } else {
+              element.selected = false;
+            }
+            return element
+          })
+        });
+      }, 200)
+    }
+  }, [data?.new]);
+
+  useEffect(() => {
     if (!selected) {
       setShowList(false);
       setIsEditable(false);
-      //setLabel("");
     }
   }, [selected]);
 

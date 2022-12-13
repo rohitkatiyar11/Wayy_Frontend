@@ -104,7 +104,8 @@ function ReactFlowPro() {
       data: {
         label: "", list: (
           <List data={[{ text: "Daily Run", status: "pending" }, { text: "Finish 10K", status: "completed" }]} />
-        )
+        ),
+        new: true
       }
     };
 
