@@ -36,7 +36,7 @@ function useEdgeClick(id) {
         label: "", list: (
           <List data={[{ text: "Daily Run", status: "pending" }, { text: "Finish 10K", status: "completed" }]} />
         ),
-        new: true
+        selected: true
       },
       type: 'workflow',
     };
@@ -63,7 +63,10 @@ function useEdgeClick(id) {
     // insert the node between the source and target node in the react flow state
     setNodes((nodes) => {
       const targetNodeIndex = nodes.findIndex((node) => node.id === edge.target);
-
+      nodes = nodes.map(nd => {
+        nd.data.selected = false;
+        return nd;
+      })
       return [...nodes.slice(0, targetNodeIndex), insertNode, ...nodes.slice(targetNodeIndex, nodes.length)];
     });
   };

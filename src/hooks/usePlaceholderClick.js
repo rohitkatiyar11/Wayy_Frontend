@@ -49,9 +49,11 @@ export function usePlaceholderClick(id) {
                 label: "", list: (
                   <List data={[{ text: "Daily Run", status: "pending" }, { text: "Finish 10K", status: "completed" }]} />
                 ),
-                new: true
+                selected: true
               }
             };
+          } else {
+            node.data.selected = false;
           }
           return node;
         })

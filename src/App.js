@@ -105,7 +105,7 @@ function ReactFlowPro() {
         label: "", list: (
           <List data={[{ text: "Daily Run", status: "pending" }, { text: "Finish 10K", status: "completed" }]} />
         ),
-        new: true
+        selected: true
       }
     };
 
@@ -143,7 +143,10 @@ function ReactFlowPro() {
 
     // add the new nodes (child and placeholder), filter out the existing placeholder nodes of the clicked node
     setNodes((nodes) =>
-      nodes.filter((node) => !existingPlaceholders.includes(node.id)).concat([childNode, childPlaceholderNode])
+      nodes.map(nd => {
+        nd.data.selected = false;
+        return nd;
+      }).filter((node) => !existingPlaceholders.includes(node.id)).concat([childNode, childPlaceholderNode])
     );
 
     // add the new edges (node -> child, child -> placeholder), filter out any placeholder edges
@@ -155,7 +158,7 @@ function ReactFlowPro() {
   useEffect(() => {
     if (enterPressed) {
       const nodes = getNodes();
-      const selectedNode = nodes.find(({ selected }) => !!selected);
+      const selectedNode = nodes.find(({ data }) => data?.selected);
       if (selectedNode) {
         handleNodeCreation(selectedNode.id);
       }
@@ -165,7 +168,7 @@ function ReactFlowPro() {
   useEffect(() => {
     if (tabPressed) {
       const nodes = getNodes();
-      const selectedNode = nodes.find(({ selected }) => !!selected);
+      const selectedNode = nodes.find(({ data }) => data?.selected);
       if (selectedNode) {
         const edges = getEdges();
         const targetEdge = edges.find(({ target }) => selectedNode.id === target);
