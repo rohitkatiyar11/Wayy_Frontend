@@ -22,7 +22,7 @@ const WorkflowNode = ({ id, data, selected }) => {
     if (!selected) {
       setShowList(false);
       setIsEditable(false);
-      setLabel("");
+      //setLabel("");
     }
   }, [selected]);
 
@@ -35,7 +35,7 @@ const WorkflowNode = ({ id, data, selected }) => {
 
   useEffect(() => {
     if (arrowPresses) {
-      setShowList(selected);
+      setShowList((showList) => selected && !showList);
     }
   }, [arrowPresses]);
 

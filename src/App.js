@@ -68,6 +68,8 @@ function ReactFlowPro() {
   }, []);
   const enterPressed = useKeyPress(['Enter']);
   const tabPressed = useKeyPress(['Tab']);
+  const deletePressed = useKeyPress(['Backspace', 'Delete']);
+
 
   const onConnect = useCallback((params) => setEdges((els) => addEdge(params, els)), []);
   // this hook call ensures that the layout is re-calculated every time the graph changes
@@ -97,6 +99,7 @@ function ReactFlowPro() {
       // 150 pixels below the parent node, this spacing can be adjusted in the useLayout hook
       position: { x: parentNode.position.x, y: parentNode.position.y + 150 },
       type: 'workflow',
+      selected: true,
       // data: { label: randomLabel() },
       data: {
         label: "", list: (
@@ -191,6 +194,7 @@ function ReactFlowPro() {
               nodesConnectable={false}
               zoomOnDoubleClick={false}
               onSelectionChange={handleOnSelectionChange}
+              deleteKeyCode={null}
             >
               <Controls
                 onZoomIn={() => console.log("zoom in pressed")}
