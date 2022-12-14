@@ -245,7 +245,6 @@ const WorkflowNode = ({ id, data }) => {
       // 150 pixels below the parent node, this spacing can be adjusted in the useLayout hook
       position: { x: parentNode.position.x, y: parentNode.position.y + 150 },
       type: 'workflow',
-      selected: true,
       // data: { label: randomLabel() },
       data: {
         label: "", list: (
@@ -324,7 +323,7 @@ const WorkflowNode = ({ id, data }) => {
   }
 
   return (
-    <div tabIndex={0} onClick={honClick} onDoubleClick={() => setShowList(true)} className={cx(data.mainGoal ? styles.node : styles.childNode, data.selected ? "selected-node" : "")} title="click to add a child node">
+    <div onClick={honClick} onDoubleClick={() => setShowList(true)} className={cx(data.mainGoal ? styles.node : styles.childNode, data.selected ? "selected-node" : "")} title="click to add a child node">
       {isEditable ? getEditableLable() : getReadOnlyLable()}
       <Handle className={styles.handle} type="target" position={Position.Top} isConnectable={false} />
       <Handle className={styles.handle} type="source" position={Position.Bottom} isConnectable={false} />

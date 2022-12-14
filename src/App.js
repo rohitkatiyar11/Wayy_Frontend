@@ -23,7 +23,6 @@ import useLayout from './hooks/useLayout';
 import nodeTypes from './NodeTypes';
 import edgeTypes from './EdgeTypes';
 import { inodes, iedges } from "./initial-elements";
-import 'reactflow/dist/style.css';
 import styled from "styled-components";
 import { Container, Row, Col } from "react-bootstrap";
 import 'reactflow/dist/style.css';
@@ -99,7 +98,6 @@ function ReactFlowPro() {
       // 150 pixels below the parent node, this spacing can be adjusted in the useLayout hook
       position: { x: parentNode.position.x, y: parentNode.position.y + 150 },
       type: 'workflow',
-      selected: true,
       // data: { label: randomLabel() },
       data: {
         label: "", list: (
