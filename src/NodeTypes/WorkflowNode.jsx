@@ -34,11 +34,9 @@ const WorkflowNode = ({ id, data }) => {
 
   useEffect(() => {
     if (anyKeyPressed) {
-      setTimeout(() => {
-        setIsEditable((isEditable) => {
-          setLabel((label) => label + localStorage.getItem("tempStr"));
-          return data?.selected;
-        })
+      setIsEditable((isEditable) => {
+        setLabel((label) => label + localStorage.getItem("tempStr"));
+        return data?.selected;
       })
     }
     inputRef && inputRef.current && inputRef.current.focus();
@@ -47,6 +45,12 @@ const WorkflowNode = ({ id, data }) => {
   useEffect(() => {
     if (arrowPresses) {
       setShowList((showList) => data?.selected && !showList);
+      setTimeout(() => {
+        if (document.getElementsByClassName("listView")) {
+          document.getElementsByClassName("listView")[0].click()
+          document.getElementsByClassName("listView")[0].click()
+        }
+      })
     }
   }, [arrowPresses]);
 
