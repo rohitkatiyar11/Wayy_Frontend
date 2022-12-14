@@ -196,7 +196,7 @@ function ReactFlowPro() {
     <AppContext.Provider value={{ onClickNode: handleOnClickNode }}>
       <ContainerDiv fluid>
         <Row>
-          <Col md={8}>
+          <Col md={12}>
             <div style={{ height: '100vh' }}>
               <ReactFlow
                 onConnect={onConnect}
@@ -214,16 +214,16 @@ function ReactFlowPro() {
                 onSelectionChange={handleOnSelectionChange}
                 deleteKeyCode={null}
               >
-                <Controls
+                {/* <Controls
                   onZoomIn={() => console.log("zoom in pressed")}
                 >
                   <ControlButton onClick={() => console.log("action")}>h</ControlButton>
-                </Controls>
+                </Controls> */}
                 <Background color="#aaa" gap={16} />
               </ReactFlow>
             </div>
           </Col>
-          <Col md={4} style={{ marginTop: "40px" }}>
+          {/* <Col md={4} style={{ marginTop: "40px" }}>
             <Eventcalendar
               theme="ios"
               themeVariant="light"
@@ -250,7 +250,7 @@ function ReactFlowPro() {
 
               }}
             />
-          </Col>
+          </Col> */}
         </Row>
       </ContainerDiv>
     </AppContext.Provider>
