@@ -1,12 +1,15 @@
-import React, { memo, useState, useEffect } from 'react';
+import React, { memo, useState, useEffect, useContext } from 'react';
 import { Handle, Position, useReactFlow, useKeyPress, getOutgoers } from 'reactflow';
 import cx from 'classnames';
 import styles from './NodeTypes.module.css';
 import useNodeClickHandler from '../hooks/useNodeClick';
 import { uuid, randomLabel } from '../utils';
 import List from "../list";
+import { AppContext } from '../context';
+import { lab } from 'd3-color';
 
 const WorkflowNode = ({ id, data }) => {
+  const { onClickNode } = useContext(AppContext);
   const inputRef = React.createRef();
   const [label, setLabel] = useState(data.label);
   const [temp, setTemp] = useState("");
@@ -17,8 +20,10 @@ const WorkflowNode = ({ id, data }) => {
   // see the hook implementation for details of the click handler
   // calling onClick adds a child node to this node
   const onClick = useNodeClickHandler(id);
-  const anyKeyPressed = useKeyPress(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'])
-  const arrowPresses = useKeyPress(["ArrowUp", "ArrowDown", "ArrowRight", "ArrowLeft", "Space"]);
+  const chars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+  const anyKeyPressed = useKeyPress(chars)
+  //const arrowPresses = useKeyPress(["ArrowUp", "ArrowDown", "ArrowRight", "ArrowLeft", "Space"]);
+  const arrowPresses = useKeyPress(["Space"]);
 
   useEffect(() => {
     if (!data?.selected) {
@@ -29,7 +34,12 @@ const WorkflowNode = ({ id, data }) => {
 
   useEffect(() => {
     if (anyKeyPressed) {
-      setIsEditable(data?.selected);
+      setTimeout(() => {
+        setIsEditable((isEditable) => {
+          setLabel((label) => label + localStorage.getItem("tempStr"));
+          return data?.selected;
+        })
+      })
     }
     inputRef && inputRef.current && inputRef.current.focus();
   }, [anyKeyPressed]);
@@ -41,15 +51,7 @@ const WorkflowNode = ({ id, data }) => {
   }, [arrowPresses]);
 
   const honClick = () => {
-    setNodes((nodes) => {
-      return nodes.map(element => {
-        if (element.id === id) {
-          element.data.selected = true;
-        } else {
-          element.data.selected = false;
-        }
-      })
-    });
+    onClickNode(id)
   }
 
   const getReadOnlyLable = () => {
@@ -152,6 +154,7 @@ const WorkflowNode = ({ id, data }) => {
 
   const _handleKeyDown = (e) => {
     if (e.key === 'Enter') {
+      handleLabelBlur()
       setIsEditable(false);
       onClick();
     } else if (e.key === 'Tab') {
@@ -172,7 +175,7 @@ const WorkflowNode = ({ id, data }) => {
   }
 
   const getKeyDown = (e) => {
-    setTemp(e.key);
+    chars.includes(e.key) ? localStorage.setItem("tempStr", e.key) : localStorage.setItem("tempStr", "");
   }
 
   return (

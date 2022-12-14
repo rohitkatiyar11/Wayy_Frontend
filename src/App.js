@@ -31,7 +31,7 @@ import "@mobiscroll/react/dist/css/mobiscroll.min.css";
 import { Eventcalendar, getJson, toast } from '@mobiscroll/react';
 import { uuid, randomLabel } from './utils';
 import List from "./list";
-
+import { AppContext } from './context';
 
 const ContainerDiv = styled(Container)`
   font-family: sans-serif;
@@ -179,66 +179,81 @@ function ReactFlowPro() {
     }
   }, [tabPressed]);
 
-  return (
-    <ContainerDiv fluid>
-      <Row>
-        <Col md={8}>
-          <div style={{ height: '100vh' }}>
-            <ReactFlow
-              onConnect={onConnect}
-              defaultNodes={inodes}
-              defaultEdges={iedges}
-              proOptions={proOptions}
-              fitView
-              nodeTypes={nodeTypes}
-              edgeTypes={edgeTypes}
-              fitViewOptions={fitViewOptions}
-              minZoom={0.2}
-              nodesDraggable={false}
-              nodesConnectable={false}
-              zoomOnDoubleClick={false}
-              onSelectionChange={handleOnSelectionChange}
-              deleteKeyCode={null}
-            >
-              <Controls
-                onZoomIn={() => console.log("zoom in pressed")}
-              >
-                <ControlButton onClick={() => console.log("action")}>h</ControlButton>
-              </Controls>
-              <Background color="#aaa" gap={16} />
-            </ReactFlow>
-          </div>
-        </Col>
-        <Col md={4} style={{ marginTop: "40px" }}>
-          <Eventcalendar
-            theme="ios"
-            themeVariant="light"
-            clickToCreate={true}
-            dragToCreate={true}
-            dragToMove={true}
-            dragToResize={true}
-            eventDelete={true}
-            data={myEvents}
-            view={view}
-            onEventClick={onEventClick}
-            responsive={{
-              xsmall: {
-                view: {
-                  schedule: { type: 'day' }
-                }
-              },
-              custom: { // Custom breakpoint
-                breakpoint: 600,
-                view: {
-                  schedule: { type: 'week' }
-                }
-              }
+  const handleOnClickNode = (id) => {
+    setNodes((nodes) => {
+      return nodes.map(element => {
+        if (element.id === id) {
+          element.data.selected = true;
+        } else {
+          element.data.selected = false;
+        }
+        return element;
+      })
+    });
+  }
 
-            }}
-          />
-        </Col>
-      </Row>
-    </ContainerDiv>
+  return (
+    <AppContext.Provider value={{ onClickNode: handleOnClickNode }}>
+      <ContainerDiv fluid>
+        <Row>
+          <Col md={8}>
+            <div style={{ height: '100vh' }}>
+              <ReactFlow
+                onConnect={onConnect}
+                defaultNodes={inodes}
+                defaultEdges={iedges}
+                proOptions={proOptions}
+                fitView
+                nodeTypes={nodeTypes}
+                edgeTypes={edgeTypes}
+                fitViewOptions={fitViewOptions}
+                minZoom={0.2}
+                nodesDraggable={false}
+                nodesConnectable={false}
+                zoomOnDoubleClick={false}
+                onSelectionChange={handleOnSelectionChange}
+                deleteKeyCode={null}
+              >
+                <Controls
+                  onZoomIn={() => console.log("zoom in pressed")}
+                >
+                  <ControlButton onClick={() => console.log("action")}>h</ControlButton>
+                </Controls>
+                <Background color="#aaa" gap={16} />
+              </ReactFlow>
+            </div>
+          </Col>
+          <Col md={4} style={{ marginTop: "40px" }}>
+            <Eventcalendar
+              theme="ios"
+              themeVariant="light"
+              clickToCreate={true}
+              dragToCreate={true}
+              dragToMove={true}
+              dragToResize={true}
+              eventDelete={true}
+              data={myEvents}
+              view={view}
+              onEventClick={onEventClick}
+              responsive={{
+                xsmall: {
+                  view: {
+                    schedule: { type: 'day' }
+                  }
+                },
+                custom: { // Custom breakpoint
+                  breakpoint: 600,
+                  view: {
+                    schedule: { type: 'week' }
+                  }
+                }
+
+              }}
+            />
+          </Col>
+        </Row>
+      </ContainerDiv>
+    </AppContext.Provider>
   );
 }
 
