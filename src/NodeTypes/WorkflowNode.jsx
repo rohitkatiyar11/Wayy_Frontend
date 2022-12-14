@@ -20,8 +20,44 @@ const WorkflowNode = ({ id, data }) => {
   // see the hook implementation for details of the click handler
   // calling onClick adds a child node to this node
   const onClick = useNodeClickHandler(id);
-  const chars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
-  const anyKeyPressed = useKeyPress(chars)
+
+
+  const aPressed = useKeyPress(["a"])
+  const bPressed = useKeyPress(["b"])
+  const cPressed = useKeyPress(["c"])
+  const dPressed = useKeyPress(["d"])
+  const ePressed = useKeyPress(["e"])
+  const fPressed = useKeyPress(["f"])
+  const gPressed = useKeyPress(["g"])
+  const hPressed = useKeyPress(["h"])
+  const iPressed = useKeyPress(["i"])
+  const jPressed = useKeyPress(["j"])
+  const kPressed = useKeyPress(["k"])
+  const lPressed = useKeyPress(["l"])
+  const mPressed = useKeyPress(["m"])
+  const nPressed = useKeyPress(["n"])
+  const oPressed = useKeyPress(["o"])
+  const pPressed = useKeyPress(["p"])
+  const qPressed = useKeyPress(["q"])
+  const rPressed = useKeyPress(["r"])
+  const sPressed = useKeyPress(["s"])
+  const tPressed = useKeyPress(["t"])
+  const uPressed = useKeyPress(["u"])
+  const vPressed = useKeyPress(["v"])
+  const wPressed = useKeyPress(["w"])
+  const xPressed = useKeyPress(["x"])
+  const yPressed = useKeyPress(["y"])
+  const zPressed = useKeyPress(["z"])
+  const Presse1 = useKeyPress(["1"])
+  const Presse2 = useKeyPress(["2"])
+  const Presse3 = useKeyPress(["2"])
+  const Presse4 = useKeyPress(["4"])
+  const Presse5 = useKeyPress(["5"])
+  const Presse6 = useKeyPress(["6"])
+  const Presse7 = useKeyPress(["7"])
+  const Presse8 = useKeyPress(["8"])
+  const Presse9 = useKeyPress(["9"])
+
   //const arrowPresses = useKeyPress(["ArrowUp", "ArrowDown", "ArrowRight", "ArrowLeft", "Space"]);
   const arrowPresses = useKeyPress(["Space"]);
 
@@ -33,14 +69,123 @@ const WorkflowNode = ({ id, data }) => {
   }, [data?.selected]);
 
   useEffect(() => {
-    if (anyKeyPressed) {
-      setIsEditable((isEditable) => {
-        setLabel((label) => label + localStorage.getItem("tempStr"));
-        return data?.selected;
-      })
+    if (aPressed) {
+      setLabel((label) => label + "a");
+      setIsEditable(data?.selected)
+    } else if (bPressed) {
+      setLabel((label) => label + "b");
+      setIsEditable(data?.selected)
+    } else if (cPressed) {
+      setLabel((label) => label + "c");
+      setIsEditable(data?.selected)
+    } else if (dPressed) {
+      setLabel((label) => label + "d");
+      setIsEditable(data?.selected)
+    } else if (ePressed) {
+      setLabel((label) => label + "e");
+      setIsEditable(data?.selected)
+    } else if (fPressed) {
+      setLabel((label) => label + "f");
+      setIsEditable(data?.selected)
+    } else if (gPressed) {
+      setLabel((label) => label + "g");
+      setIsEditable(data?.selected)
+    } else if (hPressed) {
+      setLabel((label) => label + "h");
+      setIsEditable(data?.selected)
+    } else if (iPressed) {
+      setLabel((label) => label + "i");
+      setIsEditable(data?.selected)
+    } else if (jPressed) {
+      setLabel((label) => label + "j");
+      setIsEditable(data?.selected)
+    } else if (kPressed) {
+      setLabel((label) => label + "k");
+      setIsEditable(data?.selected)
+    } else if (lPressed) {
+      setLabel((label) => label + "l");
+      setIsEditable(data?.selected)
+    } else if (mPressed) {
+      setLabel((label) => label + "m");
+      setIsEditable(data?.selected)
+    } else if (nPressed) {
+      setLabel((label) => label + "n");
+      setIsEditable(data?.selected)
+    } else if (oPressed) {
+      setLabel((label) => label + "o");
+      setIsEditable(data?.selected)
+    } else if (pPressed) {
+      setLabel((label) => label + "p");
+      setIsEditable(data?.selected)
+    } else if (qPressed) {
+      setLabel((label) => label + "q");
+      setIsEditable(data?.selected)
+    } else if (rPressed) {
+      setLabel((label) => label + "r");
+      setIsEditable(data?.selected)
+    } else if (sPressed) {
+      setLabel((label) => label + "s");
+      setIsEditable(data?.selected)
+    } else if (tPressed) {
+      setLabel((label) => label + "t");
+      setIsEditable(data?.selected)
+    } else if (uPressed) {
+      setLabel((label) => label + "u");
+      setIsEditable(data?.selected)
+    } else if (vPressed) {
+      setLabel((label) => label + "v");
+      setIsEditable(data?.selected)
+    } else if (wPressed) {
+      setLabel((label) => label + "w");
+      setIsEditable(data?.selected)
+    } else if (xPressed) {
+      setLabel((label) => label + "x");
+      setIsEditable(data?.selected)
+    } else if (yPressed) {
+      setLabel((label) => label + "y");
+      setIsEditable(data?.selected)
+    } else if (zPressed) {
+      setLabel((label) => label + "z");
+      setIsEditable(data?.selected)
+    } else if (Presse1) {
+      setLabel((label) => label + "1");
+      setIsEditable(data?.selected)
+    } else if (Presse2) {
+      setLabel((label) => label + "2");
+      setIsEditable(data?.selected)
+    } else if (Presse3) {
+      setLabel((label) => label + "3");
+      setIsEditable(data?.selected)
+    } else if (Presse4) {
+      setLabel((label) => label + "4");
+      setIsEditable(data?.selected)
+    } else if (Presse5) {
+      setLabel((label) => label + "5");
+      setIsEditable(data?.selected)
+    } else if (Presse6) {
+      setLabel((label) => label + "6");
+      setIsEditable(data?.selected)
+    } else if (Presse7) {
+      setLabel((label) => label + "7");
+      setIsEditable(data?.selected)
+    } else if (Presse8) {
+      setLabel((label) => label + "8");
+      setIsEditable(data?.selected)
+    } else if (Presse9) {
+      setLabel((label) => label + "9");
+      setIsEditable(data?.selected)
     }
     inputRef && inputRef.current && inputRef.current.focus();
-  }, [anyKeyPressed]);
+
+  }, [aPressed, bPressed, cPressed, dPressed, ePressed, fPressed, gPressed, hPressed, iPressed, jPressed, kPressed, lPressed, mPressed, nPressed, oPressed, pPressed, qPressed, rPressed, sPressed, tPressed, uPressed, vPressed, wPressed, xPressed, yPressed, zPressed, Presse1, Presse2, Presse3, Presse4, Presse5, Presse6, Presse7, Presse8, Presse9]);
+
+  // useEffect(() => {
+  //   if (bPressed) {
+  //     setLabel((label) => label + "b");
+  //     setIsEditable(data?.selected)
+  //   }
+  //   inputRef && inputRef.current && inputRef.current.focus();
+  // }, [bPressed]);
 
   useEffect(() => {
     if (arrowPresses) {
@@ -178,12 +323,8 @@ const WorkflowNode = ({ id, data }) => {
     )
   }
 
-  const getKeyDown = (e) => {
-    chars.includes(e.key) ? localStorage.setItem("tempStr", e.key) : localStorage.setItem("tempStr", "");
-  }
-
   return (
-    <div tabIndex={0} onKeyDown={getKeyDown} onClick={honClick} onDoubleClick={() => setShowList(true)} className={cx(data.mainGoal ? styles.node : styles.childNode, data.selected ? "selected-node" : "")} title="click to add a child node">
+    <div tabIndex={0} onClick={honClick} onDoubleClick={() => setShowList(true)} className={cx(data.mainGoal ? styles.node : styles.childNode, data.selected ? "selected-node" : "")} title="click to add a child node">
       {isEditable ? getEditableLable() : getReadOnlyLable()}
       <Handle className={styles.handle} type="target" position={Position.Top} isConnectable={false} />
       <Handle className={styles.handle} type="source" position={Position.Bottom} isConnectable={false} />
