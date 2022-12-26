@@ -48,6 +48,37 @@ function ReactFlowPro() {
 
   const [myEvents, setEvents] = React.useState([]);
 
+  const backSpacePresses = useKeyPress(["Backspace", "Delete"]);
+
+
+  const getDeletableIds = (edges, source, temp = []) => {
+    for (let i = 0; i < edges.length; i++) {
+      if (edges[i].source === source) {
+        temp.push(edges[i].target);
+        getDeletableIds(edges, edges[i].target, temp);
+      }
+    }
+    return temp;
+  }
+
+  useEffect(() => {
+    if (backSpacePresses) {
+      const nodes = getNodes();
+      const edges = getEdges();
+      const selectedNode = nodes.find(({ data }) => data?.selected);
+      if (selectedNode && !selectedNode?.data?.mainGoal) {
+        let unodes = nodes.filter(n => selectedNode.id !== n.id);
+        let uedges = edges.filter(e => e.target !== selectedNode.id);
+        // calculate children
+        const deletableIds = getDeletableIds(uedges, selectedNode.id);
+        unodes = unodes.filter(n => !deletableIds.includes(n.id));
+        uedges = uedges.filter(e => !deletableIds.includes(e.target));
+        setNodes(unodes);
+        setEdges(uedges);
+      }
+    }
+  }, [backSpacePresses]);
+
   React.useEffect(() => {
     getJson('https://trial.mobiscroll.com/events/?vers=5', (events) => {
       setEvents(events);
@@ -190,6 +221,11 @@ function ReactFlowPro() {
     });
   }
 
+  const handleDeleteNode = (data) => {
+    console.log('data', data)
+    return;
+  }
+
   return (
     <AppContext.Provider value={{ onClickNode: handleOnClickNode }}>
       <ContainerDiv fluid>
@@ -211,6 +247,7 @@ function ReactFlowPro() {
                 zoomOnDoubleClick={false}
                 onSelectionChange={handleOnSelectionChange}
                 deleteKeyCode={null}
+                onNodesDelete={handleDeleteNode}
               >
                 {/* <Controls
                   onZoomIn={() => console.log("zoom in pressed")}
