@@ -49,11 +49,11 @@ export function usePlaceholderClick(id) {
                 label: "", list: (
                   <List data={[{ text: "Daily Run", status: "pending" }, { text: "Finish 10K", status: "completed" }]} />
                 ),
-                selected: true
-              }
+              },
+              selected: true
             };
           } else {
-            node.data.selected = false;
+            node.selected = false;
           }
           return node;
         })
@@ -76,6 +76,7 @@ export function usePlaceholderClick(id) {
         // add the new placeholder edge
         .concat([childPlaceholderEdge])
     );
+    localStorage.setItem('selectedNodeId', childPlaceholderId);
   };
 
   return onClick;

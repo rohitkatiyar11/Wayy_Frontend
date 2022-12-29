@@ -81,6 +81,7 @@ function useLayout() {
           },
           data: { ...node.data },
           type: node.type,
+          selected: node.selected
         };
       });
 
@@ -99,6 +100,7 @@ function useLayout() {
             },
             data: { ...node.data },
             type: node.type,
+            selected: node.selected
           };
         });
 

@@ -36,8 +36,8 @@ function useEdgeClick(id) {
         label: "", list: (
           <List data={[{ text: "Daily Run", status: "pending" }, { text: "Finish 10K", status: "completed" }]} />
         ),
-        selected: true
       },
+      selected: true,
       type: 'workflow',
     };
 
@@ -64,11 +64,12 @@ function useEdgeClick(id) {
     setNodes((nodes) => {
       const targetNodeIndex = nodes.findIndex((node) => node.id === edge.target);
       nodes = nodes.map(nd => {
-        nd.data.selected = false;
+        nd.selected = false;
         return nd;
       })
       return [...nodes.slice(0, targetNodeIndex), insertNode, ...nodes.slice(targetNodeIndex, nodes.length)];
     });
+    localStorage.setItem('selectedNodeId', insertNodeId);
   };
 
   return handleEdgeClick;

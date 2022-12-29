@@ -8,7 +8,7 @@ import List from "../list";
 import { AppContext } from '../context';
 import { lab } from 'd3-color';
 
-const WorkflowNode = ({ id, data }) => {
+const WorkflowNode = ({ id, data, selected }) => {
   const { onClickNode } = useContext(AppContext);
   const inputRef = React.createRef();
   const [label, setLabel] = useState(data.label);
@@ -62,118 +62,118 @@ const WorkflowNode = ({ id, data }) => {
   const arrowPresses = useKeyPress(["Space"]);
 
   useEffect(() => {
-    if (!data?.selected) {
+    if (!selected) {
       setShowList(false);
       setIsEditable(false);
     }
-  }, [data?.selected]);
+  }, [selected]);
 
   useEffect(() => {
     if (aPressed) {
       setLabel((label) => label + "a");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (bPressed) {
       setLabel((label) => label + "b");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (cPressed) {
       setLabel((label) => label + "c");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (dPressed) {
       setLabel((label) => label + "d");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (ePressed) {
       setLabel((label) => label + "e");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (fPressed) {
       setLabel((label) => label + "f");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (gPressed) {
       setLabel((label) => label + "g");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (hPressed) {
       setLabel((label) => label + "h");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (iPressed) {
       setLabel((label) => label + "i");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (jPressed) {
       setLabel((label) => label + "j");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (kPressed) {
       setLabel((label) => label + "k");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (lPressed) {
       setLabel((label) => label + "l");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (mPressed) {
       setLabel((label) => label + "m");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (nPressed) {
       setLabel((label) => label + "n");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (oPressed) {
       setLabel((label) => label + "o");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (pPressed) {
       setLabel((label) => label + "p");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (qPressed) {
       setLabel((label) => label + "q");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (rPressed) {
       setLabel((label) => label + "r");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (sPressed) {
       setLabel((label) => label + "s");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (tPressed) {
       setLabel((label) => label + "t");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (uPressed) {
       setLabel((label) => label + "u");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (vPressed) {
       setLabel((label) => label + "v");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (wPressed) {
       setLabel((label) => label + "w");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (xPressed) {
       setLabel((label) => label + "x");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (yPressed) {
       setLabel((label) => label + "y");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (zPressed) {
       setLabel((label) => label + "z");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (Presse1) {
       setLabel((label) => label + "1");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (Presse2) {
       setLabel((label) => label + "2");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (Presse3) {
       setLabel((label) => label + "3");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (Presse4) {
       setLabel((label) => label + "4");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (Presse5) {
       setLabel((label) => label + "5");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (Presse6) {
       setLabel((label) => label + "6");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (Presse7) {
       setLabel((label) => label + "7");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (Presse8) {
       setLabel((label) => label + "8");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     } else if (Presse9) {
       setLabel((label) => label + "9");
-      setIsEditable(data?.selected)
+      setIsEditable(selected)
     }
     inputRef && inputRef.current && inputRef.current.focus();
 
@@ -182,14 +182,14 @@ const WorkflowNode = ({ id, data }) => {
   // useEffect(() => {
   //   if (bPressed) {
   //     setLabel((label) => label + "b");
-  //     setIsEditable(data?.selected)
+  //     setIsEditable(selected)
   //   }
   //   inputRef && inputRef.current && inputRef.current.focus();
   // }, [bPressed]);
 
   useEffect(() => {
     if (arrowPresses) {
-      setShowList((showList) => data?.selected && !showList);
+      setShowList((showList) => selected && !showList);
       setTimeout(() => {
         if (document.getElementsByClassName("listView")) {
           document.getElementsByClassName("listView")[0].click()
@@ -250,8 +250,8 @@ const WorkflowNode = ({ id, data }) => {
         label: "", list: (
           <List data={[{ text: "Daily Run", status: "pending" }, { text: "Finish 10K", status: "completed" }]} />
         ),
-        selected: true
-      }
+      },
+      selected: true
     };
 
     // create a placeholder for the new child node
@@ -289,7 +289,7 @@ const WorkflowNode = ({ id, data }) => {
     // add the new nodes (child and placeholder), filter out the existing placeholder nodes of the clicked node
     setNodes((nodes) =>
       nodes.map(nd => {
-        nd.data.selected = false;
+        nd.selected = false;
         return nd;
       }).filter((node) => !existingPlaceholders.includes(node.id)).concat([childNode, childPlaceholderNode])
     );
@@ -323,7 +323,7 @@ const WorkflowNode = ({ id, data }) => {
   }
 
   return (
-    <div onClick={honClick} onDoubleClick={() => setShowList(true)} className={cx(data.mainGoal ? styles.node : styles.childNode, data.selected ? "selected-node" : "")} title="click to add a child node">
+    <div onClick={honClick} onDoubleClick={() => setShowList(true)} className={cx(data.mainGoal ? styles.node : styles.childNode, selected ? "selected-node" : "")} title="click to add a child node">
       {isEditable ? getEditableLable() : getReadOnlyLable()}
       <Handle className={styles.handle} type="target" position={Position.Top} isConnectable={false} />
       <Handle className={styles.handle} type="source" position={Position.Bottom} isConnectable={false} />

@@ -32,9 +32,9 @@ export function useNodeClick(id) {
       data: {
         label: "", list: (
           <List data={[{ text: "Daily Run", status: "pending" }, { text: "Finish 10K", status: "completed" }]} />
-        ),
-        selected: true
-      }
+        )
+      },
+      selected: true
     };
 
     // create a placeholder for the new child node
@@ -72,7 +72,7 @@ export function useNodeClick(id) {
     // add the new nodes (child and placeholder), filter out the existing placeholder nodes of the clicked node
     setNodes((nodes) =>
       nodes.map(nd => {
-        nd.data.selected = false;
+        nd.selected = false;
         return nd;
       }).filter((node) => !existingPlaceholders.includes(node.id)).concat([childNode, childPlaceholderNode])
     );
@@ -81,6 +81,9 @@ export function useNodeClick(id) {
     setEdges((edges) =>
       edges.filter((edge) => !existingPlaceholders.includes(edge.target)).concat([childEdge, childPlaceholderEdge])
     );
+
+    localStorage.setItem('selectedNodeId', childNodeId);
+
   }, [getEdges, getNode, getNodes, id, setEdges, setNodes]);
 
   return onClick;

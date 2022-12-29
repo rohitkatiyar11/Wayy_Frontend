@@ -11,26 +11,21 @@
  **/
 import React, { useCallback, useEffect } from 'react';
 import ReactFlow, {
-  Background, Edge, Node, ProOptions, ReactFlowProvider, Controls, ControlButton, useNodesState,
-  useEdgesState,
-  useKeyPress,
-  addEdge,
-  useReactFlow,
-  getOutgoers
+  addEdge, Background, getOutgoers, ReactFlowProvider, useKeyPress, useReactFlow
 } from 'reactflow';
 
-import useLayout from './hooks/useLayout';
-import nodeTypes from './NodeTypes';
-import edgeTypes from './EdgeTypes';
-import { inodes, iedges } from "./initial-elements";
-import styled from "styled-components";
-import { Container, Row, Col } from "react-bootstrap";
-import 'reactflow/dist/style.css';
+import { getJson, toast } from '@mobiscroll/react';
 import "@mobiscroll/react/dist/css/mobiscroll.min.css";
-import { Eventcalendar, getJson, toast } from '@mobiscroll/react';
-import { uuid, randomLabel } from './utils';
-import List from "./list";
+import { Col, Container, Row } from "react-bootstrap";
+import 'reactflow/dist/style.css';
+import styled from "styled-components";
 import { AppContext } from './context';
+import edgeTypes from './EdgeTypes';
+import useLayout from './hooks/useLayout';
+import { iedges, inodes } from "./initial-elements";
+import List from "./list";
+import nodeTypes from './NodeTypes';
+import { uuid } from './utils';
 
 const ContainerDiv = styled(Container)`
   font-family: sans-serif;
@@ -46,10 +41,9 @@ const fitViewOptions = {
 function ReactFlowPro() {
   const { setEdges, setNodes, getNodes, getEdges, getNode } = useReactFlow();
 
-  const [myEvents, setEvents] = React.useState([]);
-
   const backSpacePresses = useKeyPress(["Backspace", "Delete"]);
-
+  const enterPressed = useKeyPress(['Enter']);
+  const tabPressed = useKeyPress(['Tab']);
 
   const getDeletableIds = (edges, source, temp = []) => {
     for (let i = 0; i < edges.length; i++) {
@@ -65,7 +59,7 @@ function ReactFlowPro() {
     if (backSpacePresses) {
       const nodes = getNodes();
       const edges = getEdges();
-      const selectedNode = nodes.find(({ data }) => data?.selected);
+      const selectedNode = nodes.find(({ selected }) => selected);
       if (selectedNode && !selectedNode?.data?.mainGoal) {
         let unodes = nodes.filter(n => selectedNode.id !== n.id);
         let uedges = edges.filter(e => e.target !== selectedNode.id);
@@ -79,36 +73,10 @@ function ReactFlowPro() {
     }
   }, [backSpacePresses]);
 
-  React.useEffect(() => {
-    getJson('https://trial.mobiscroll.com/events/?vers=5', (events) => {
-      setEvents(events);
-    }, 'jsonp');
-  }, []);
-
-  const onEventClick = React.useCallback((event) => {
-    toast({
-      message: event.event.title
-    });
-  }, []);
-
-  const view = React.useMemo(() => {
-    return {
-      schedule: { type: 'day' }
-    };
-  }, []);
-  const enterPressed = useKeyPress(['Enter']);
-  const tabPressed = useKeyPress(['Tab']);
-  const deletePressed = useKeyPress(['Backspace', 'Delete']);
-
 
   const onConnect = useCallback((params) => setEdges((els) => addEdge(params, els)), []);
   // this hook call ensures that the layout is re-calculated every time the graph changes
   useLayout();
-
-  const handleOnSelectionChange = (evt) => {
-    // console.log('enterPressed', enterPressed)
-    //console.log('evt', evt);
-  }
 
   const handleNodeCreation = (id) => {
     const parentNode = getNode(id);
@@ -133,9 +101,9 @@ function ReactFlowPro() {
       data: {
         label: "", list: (
           <List data={[{ text: "Daily Run", status: "pending" }, { text: "Finish 10K", status: "completed" }]} />
-        ),
-        selected: true
-      }
+        )
+      },
+      selected: true
     };
 
     // create a placeholder for the new child node
@@ -171,25 +139,29 @@ function ReactFlowPro() {
       .map((node) => node.id);
 
     // add the new nodes (child and placeholder), filter out the existing placeholder nodes of the clicked node
-    setNodes((nodes) =>
-      nodes.map(nd => {
-        nd.data.selected = false;
-        return nd;
-      }).filter((node) => !existingPlaceholders.includes(node.id)).concat([childNode, childPlaceholderNode])
-    );
+    const unodes = getNodes().map(nd => {
+      nd.selected = false;
+      return nd;
+    }).filter((node) => !existingPlaceholders.includes(node.id)).concat([childNode, childPlaceholderNode]);
+
+    setNodes([...unodes]);
 
     // add the new edges (node -> child, child -> placeholder), filter out any placeholder edges
     setEdges((edges) =>
       edges.filter((edge) => !existingPlaceholders.includes(edge.target)).concat([childEdge, childPlaceholderEdge])
     );
+
+    //set selected node id
+    localStorage.setItem('selectedNodeId', childNodeId);
   }
 
   useEffect(() => {
     if (enterPressed) {
       const nodes = getNodes();
-      const selectedNode = nodes.find(({ data }) => data?.selected);
-      if (selectedNode) {
-        handleNodeCreation(selectedNode.id);
+      //const selectedNode = nodes.find(({ selected }) => selected);
+      const selectedNodeId = localStorage.getItem('selectedNodeId');
+      if (selectedNodeId) {
+        handleNodeCreation(selectedNodeId);
       }
     }
   }, [enterPressed]);
@@ -197,10 +169,11 @@ function ReactFlowPro() {
   useEffect(() => {
     if (tabPressed) {
       const nodes = getNodes();
-      const selectedNode = nodes.find(({ data }) => data?.selected);
-      if (selectedNode) {
+      //const selectedNode = nodes.find(({ selected }) => selected);
+      const selectedNodeId = localStorage.getItem('selectedNodeId');
+      if (selectedNodeId) {
         const edges = getEdges();
-        const targetEdge = edges.find(({ target }) => selectedNode.id === target);
+        const targetEdge = edges.find(({ target }) => selectedNodeId === target);
         if (targetEdge) {
           handleNodeCreation(targetEdge.source);
         }
@@ -212,18 +185,14 @@ function ReactFlowPro() {
     setNodes((nodes) => {
       return nodes.map(element => {
         if (element.id === id) {
-          element.data.selected = true;
+          element.selected = true;
         } else {
-          element.data.selected = false;
+          element.selected = false;
         }
         return element;
       })
     });
-  }
-
-  const handleDeleteNode = (data) => {
-    console.log('data', data)
-    return;
+    localStorage.setItem('selectedNodeId', id);
   }
 
   return (
@@ -245,47 +214,12 @@ function ReactFlowPro() {
                 nodesDraggable={false}
                 nodesConnectable={false}
                 zoomOnDoubleClick={false}
-                onSelectionChange={handleOnSelectionChange}
                 deleteKeyCode={null}
-                onNodesDelete={handleDeleteNode}
               >
-                {/* <Controls
-                  onZoomIn={() => console.log("zoom in pressed")}
-                >
-                  <ControlButton onClick={() => console.log("action")}>h</ControlButton>
-                </Controls> */}
                 <Background color="#aaa" gap={16} />
               </ReactFlow>
             </div>
           </Col>
-          {/* <Col md={4} style={{ marginTop: "40px" }}>
-            <Eventcalendar
-              theme="ios"
-              themeVariant="light"
-              clickToCreate={true}
-              dragToCreate={true}
-              dragToMove={true}
-              dragToResize={true}
-              eventDelete={true}
-              data={myEvents}
-              view={view}
-              onEventClick={onEventClick}
-              responsive={{
-                xsmall: {
-                  view: {
-                    schedule: { type: 'day' }
-                  }
-                },
-                custom: { // Custom breakpoint
-                  breakpoint: 600,
-                  view: {
-                    schedule: { type: 'week' }
-                  }
-                }
-
-              }}
-            />
-          </Col> */}
         </Row>
       </ContainerDiv>
     </AppContext.Provider>

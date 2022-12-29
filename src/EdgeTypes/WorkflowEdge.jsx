@@ -32,9 +32,12 @@ export default function CustomEdge({
     <>
       <path id={id} style={style} className={styles.edgePath} d={edgePath} markerEnd={markerEnd} />
       {/* <g transform={`translate(${edgeCenterX}, ${edgeCenterY})`}>
-        <rect onClick={onClick} x={-10} y={-10} width={20} ry={4} rx={4} height={20} className={styles.edgeButton} />
+        <circle cx=".8" cy="0" r="10" stroke="black" stroke-width="1" fill="white" className={styles.edgeButton} />
         <text className={styles.edgeButtonText} y={5} x={-4}>
           +
+        </text>
+        <text className={styles.edgeButtonText} y={5} x={20}>
+          Enter
         </text>
       </g> */}
     </>
