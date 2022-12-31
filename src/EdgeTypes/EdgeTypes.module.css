@@ -1,7 +1,7 @@
 .edgeButton {
   cursor: pointer;
   pointer-events: all;
-  stroke: #0984e3;
+  stroke: #bbb;
   fill: white;
 }
 
@@ -12,12 +12,28 @@
 .edgeButtonText {
   pointer-events: none;
   user-select: none;
-  fill: #0984e3;
+  fill: #bbb;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  /* identical to box height, or 150% */
+
+  text-align: center;
+
+  /* Gray/30 */
+
+  color: #B5B5B8;
+}
+
+.edgeButtonSym {
+  pointer-events: none;
+  user-select: none;
+  fill: #bbb;
 }
 
 .edgePath {
   fill: none;
-  stroke: #0984e3;
+  stroke: #bbb;
   stroke-width: 1;
 }
 

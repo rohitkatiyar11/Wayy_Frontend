@@ -323,7 +323,7 @@ const WorkflowNode = ({ id, data, selected }) => {
   }
 
   return (
-    <div onClick={honClick} onDoubleClick={() => setShowList(true)} className={cx(data.mainGoal ? styles.node : styles.childNode, selected ? "selected-node" : "")} title="click to add a child node">
+    <div onClick={honClick} onDoubleClick={() => setShowList(true)} className={cx(data.mainGoal ? styles.node : styles.childNode, selected ? "selected-node" : "")} title="Enter to add a child node">
       {isEditable ? getEditableLable() : getReadOnlyLable()}
       <Handle className={styles.handle} type="target" position={Position.Top} isConnectable={false} />
       <Handle className={styles.handle} type="source" position={Position.Bottom} isConnectable={false} />

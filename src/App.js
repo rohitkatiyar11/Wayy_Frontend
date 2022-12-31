@@ -45,6 +45,13 @@ function ReactFlowPro() {
   const enterPressed = useKeyPress(['Enter']);
   const tabPressed = useKeyPress(['Tab']);
 
+  useEffect(() => {
+    localStorage.setItem('selectedNodeId', "1");
+    return () => {
+      localStorage.removeItem('selectedNodeId');
+    }
+  }, [])
+
   const getDeletableIds = (edges, source, temp = []) => {
     for (let i = 0; i < edges.length; i++) {
       if (edges[i].source === source) {
@@ -89,6 +96,7 @@ function ReactFlowPro() {
 
     // create a unique id for the placeholder (the placeholder gets added to the new child node)
     const childPlaceholderId = uuid();
+    const childTabPlaceholderId = uuid();
 
     // create the child node
     const childNode = {
@@ -106,17 +114,6 @@ function ReactFlowPro() {
       selected: true
     };
 
-    // create a placeholder for the new child node
-    // we want to display a placeholder for all workflow nodes that do not have a child already
-    // as the newly created node will not have a child, it gets this placeholder
-    const childPlaceholderNode = {
-      id: childPlaceholderId,
-      // we place the placeholder 150 pixels below the child node, spacing can be adjusted in the useLayout hook
-      position: { x: childNode.position.x, y: childNode.position.y + 150 },
-      type: 'placeholder',
-      data: { label: '+' },
-    };
-
     // we need to create a connection from parent to child
     const childEdge = {
       id: `${parentNode.id}=>${childNodeId}`,
@@ -125,30 +122,56 @@ function ReactFlowPro() {
       type: 'workflow',
     };
 
+    // create a placeholder for the new child node
+    // we want to display a placeholder for all workflow nodes that do not have a child already
+    // as the newly created node will not have a child, it gets this placeholder
+    const childPlaceholderNode = {
+      id: childPlaceholderId,
+      // we place the placeholder 150 pixels below the child node, spacing can be adjusted in the useLayout hook
+      position: { x: childNode.position.x, y: childNode.position.y + 150 },
+      type: 'enterAction',
+      data: { label: '+' },
+    };
+
     // we need to create a connection from child to our placeholder
     const childPlaceholderEdge = {
       id: `${childNodeId}=>${childPlaceholderId}`,
       source: childNodeId,
       target: childPlaceholderId,
-      type: 'placeholder',
+      type: 'enterAction',
+    };
+
+    const childTabPlaceholderNode = {
+      id: childTabPlaceholderId,
+      position: { x: parentNode.position.x, y: parentNode.position.y + 150 },
+      type: 'tabAction',
+      data: { label: '+' },
+    };
+
+    // we need to create a connection from child to our placeholder
+    const childTabPlaceholderEdge = {
+      id: `${parentNode.id}=>${childTabPlaceholderId}`,
+      source: parentNode.id,
+      target: childTabPlaceholderId,
+      type: 'tabAction',
     };
 
     // if the clicked node has had any placeholders as children, we remove them because it will get a child now
-    const existingPlaceholders = getOutgoers(parentNode, getNodes(), getEdges())
-      .filter((node) => node.type === 'placeholder')
+    const existingPlaceholders = getNodes()
+      .filter((node) => node.type === 'placeholder' || node.type === 'tabAction' || node.type === 'enterAction')
       .map((node) => node.id);
 
     // add the new nodes (child and placeholder), filter out the existing placeholder nodes of the clicked node
     const unodes = getNodes().map(nd => {
       nd.selected = false;
       return nd;
-    }).filter((node) => !existingPlaceholders.includes(node.id)).concat([childNode, childPlaceholderNode]);
+    }).filter((node) => !existingPlaceholders.includes(node.id)).concat([childNode, childTabPlaceholderNode, childPlaceholderNode]);
 
     setNodes([...unodes]);
 
     // add the new edges (node -> child, child -> placeholder), filter out any placeholder edges
     setEdges((edges) =>
-      edges.filter((edge) => !existingPlaceholders.includes(edge.target)).concat([childEdge, childPlaceholderEdge])
+      edges.filter((edge) => !existingPlaceholders.includes(edge.target)).concat([childEdge, childTabPlaceholderEdge, childPlaceholderEdge])
     );
 
     //set selected node id
@@ -181,6 +204,78 @@ function ReactFlowPro() {
     }
   }, [tabPressed]);
 
+  const createPlaceholders = (id) => {
+    const currentNode = getNode(id);
+    if (!currentNode) {
+      return;
+    }
+
+    // create a unique id for the placeholder (the placeholder gets added to the new child node)
+    const childPlaceholderId = uuid();
+    const childTabPlaceholderId = uuid();
+
+
+    const childPlaceholderNode = {
+      id: childPlaceholderId,
+      // we place the placeholder 150 pixels below the child node, spacing can be adjusted in the useLayout hook
+      position: { x: currentNode.position.x, y: currentNode.position.y + 150 },
+      type: 'enterAction',
+      data: { label: '+' },
+    };
+
+    // we need to create a connection from child to our placeholder
+    const childPlaceholderEdge = {
+      id: `${currentNode.id}=>${childPlaceholderId}`,
+      source: currentNode.id,
+      target: childPlaceholderId,
+      type: 'enterAction',
+    };
+
+    const nodesToAdd = [childPlaceholderNode];
+    const edgesToAdd = [childPlaceholderEdge];
+
+    //calculate scrrent node's parent
+    const _edges = getEdges();
+    const parentNodeEdge = _edges.find(ed => ed.target === id);
+    let childTabPlaceholderNode, childTabPlaceholderEdge;
+    if (parentNodeEdge && parentNodeEdge?.source) {
+      const parentNode = getNode(parentNodeEdge?.source);
+      childTabPlaceholderNode = {
+        id: childTabPlaceholderId,
+        position: { x: parentNode.position.x, y: parentNode.position.y + 150 },
+        type: 'tabAction',
+        data: { label: '+' },
+      };
+
+      // we need to create a connection from child to our placeholder
+      childTabPlaceholderEdge = {
+        id: `${parentNode.id}=>${childTabPlaceholderId}`,
+        source: parentNode.id,
+        target: childTabPlaceholderId,
+        type: 'tabAction',
+      };
+
+      nodesToAdd.push(childTabPlaceholderNode);
+      edgesToAdd.push(childTabPlaceholderEdge);
+    }
+
+    // if the clicked node has had any placeholders as children, we remove them because it will get a child now
+    const existingPlaceholders = getNodes()
+      .filter((node) => node.type === 'placeholder' || node.type === 'tabAction' || node.type === 'enterAction')
+      .map((node) => node.id);
+
+    // add the new nodes (child and placeholder), filter out the existing placeholder nodes of the clicked node
+    setNodes((nodes) =>
+      nodes.filter((node) => !existingPlaceholders.includes(node.id)).concat([...nodesToAdd])
+    );
+
+    // add the new edges (node -> child, child -> placeholder), filter out any placeholder edges
+    setEdges((edges) =>
+      edges.filter((edge) => !existingPlaceholders.includes(edge.target)).concat([...edgesToAdd])
+    );
+
+  }
+
   const handleOnClickNode = (id) => {
     setNodes((nodes) => {
       return nodes.map(element => {
@@ -193,6 +288,23 @@ function ReactFlowPro() {
       })
     });
     localStorage.setItem('selectedNodeId', id);
+    createPlaceholders(id);
+  }
+
+  const handleOnBlur = () => {
+    localStorage.removeItem("selectedNodeId");
+    // if the clicked node has had any placeholders as children, we remove them because it will get a child now
+    const existingPlaceholders = getNodes()
+      .filter((node) => node.type === 'placeholder' || node.type === 'tabAction' || node.type === 'enterAction')
+      .map((node) => node.id);
+
+    setNodes((nodes) =>
+      nodes.filter((node) => !existingPlaceholders.includes(node.id)));
+
+    // add the new edges (node -> child, child -> placeholder), filter out any placeholder edges
+    setEdges((edges) =>
+      edges.filter((edge) => !existingPlaceholders.includes(edge.target))
+    );
   }
 
   return (
@@ -215,6 +327,7 @@ function ReactFlowPro() {
                 nodesConnectable={false}
                 zoomOnDoubleClick={false}
                 deleteKeyCode={null}
+                onPaneClick={handleOnBlur}
               >
                 <Background color="#aaa" gap={16} />
               </ReactFlow>

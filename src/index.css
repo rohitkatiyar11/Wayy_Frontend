@@ -118,3 +118,11 @@ body,
   border-radius: 8px;
   height: 220px;
 }
+
+.react-flow__node-enterAction {
+  z-index: -1 !important;
+}
+
+.react-flow__node-tabAction {
+  z-index: -1 !important;
+}

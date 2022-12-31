@@ -49,3 +49,7 @@
   color: #bbb;
   box-shadow: none;
 }
+
+.actionNode {
+  visibility: hidden;
+}

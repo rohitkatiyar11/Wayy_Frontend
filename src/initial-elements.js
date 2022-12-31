@@ -1,5 +1,4 @@
 import React from "react";
-import List from "./list";
 
 export const inodes = [
   {
@@ -10,30 +9,18 @@ export const inodes = [
       icon: (<img src="/cup.png" width={"22px"} />),
       mainGoal: true
     },
-    position: { x: 0, y: 0 }
+    position: { x: 0, y: 0 },
+    selected: true
   },
-  // {
-  //   id: "2",
-  //   type: "workflow",
-  //   position: { x: 0, y: 150 },
-  //   data: {
-  //     label: "Sports",
-  //     list: (
-  //       <List data={[{ text: "Daily Run", status: "pending" }, { text: "Finish 10K", status: "completed" }]} />
-  //     )
-  //   }
-  // },
   {
-    id: '2',
+    id: "2",
+    position: { x: 0, y: 150 },
+    type: 'enterAction',
     data: { label: '+' },
-    position: { x: 0, y: 300 },
-    type: 'placeholder',
-  },
+  }
 ];
 
 
 export const iedges = [
-  { id: "e1-2", source: "1", target: "2" },
-  // { id: "e2-3", source: "2", target: "3" }
-
+  { id: "e1-2", source: "1", target: "2", type: "enterAction" },
 ]
