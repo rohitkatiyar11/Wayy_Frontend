@@ -84,6 +84,7 @@ function ReactFlowPro() {
         uedges = uedges.filter(e => !deletableIds.includes(e.target));
         setNodes(unodes);
         setEdges(uedges);
+        handleOnBlur();
       }
     }
   }, [backSpacePresses]);
