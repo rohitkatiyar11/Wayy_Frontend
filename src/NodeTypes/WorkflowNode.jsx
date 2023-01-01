@@ -69,6 +69,7 @@ const WorkflowNode = ({ id, data, selected }) => {
   }, [selected]);
 
   useEffect(() => {
+    console.log('pressong editable')
     if (aPressed) {
       setLabel((label) => label + "a");
       setIsEditable(selected)
@@ -303,22 +304,25 @@ const WorkflowNode = ({ id, data, selected }) => {
   const _handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       handleLabelBlur()
-      setIsEditable(false);
-      onClick();
+      e.preventDefault();
+      //setIsEditable(false);
+      //onClick();
     } else if (e.key === 'Tab') {
-      const edges = getEdges();
-      const targetEdge = edges.find(({ target }) => id === target);
-      if (targetEdge) {
-        handleNodeCreation(targetEdge.source);
-      }
+      handleLabelBlur()
+      // const edges = getEdges();
+      // const targetEdge = edges.find(({ target }) => id === target);
+      // if (targetEdge) {
+      //   handleNodeCreation(targetEdge.source);
+      // }
+      e.preventDefault();
     }
   }
 
   const getEditableLable = () => {
     return (
       data.mainGoal ? (<div className="main-goal">
-        {data.icon} <input onKeyDown={_handleKeyDown} ref={inputRef} type={"text"} value={label} onChange={handleLabelChange} onBlur={handleLabelBlur} className={data.mainGoal ? "inputNodeMainGoal" : "inputNodeSubGoal"} />
-      </div>) : <input onKeyDown={_handleKeyDown} ref={inputRef} type={"text"} value={label} onChange={handleLabelChange} onBlur={handleLabelBlur} className={data.mainGoal ? "inputNodeMainGoal" : "inputNodeSubGoal"} />
+        {data.icon} <input onKeyDown={_handleKeyDown} tabindex="-1" ref={inputRef} type={"text"} value={label} onChange={handleLabelChange} onBlur={handleLabelBlur} className={data.mainGoal ? "inputNodeMainGoal" : "inputNodeSubGoal"} />
+      </div>) : <input onKeyDown={_handleKeyDown} tabindex="-1" ref={inputRef} type={"text"} value={label} onChange={handleLabelChange} onBlur={handleLabelBlur} className={data.mainGoal ? "inputNodeMainGoal" : "inputNodeSubGoal"} />
     )
   }
 

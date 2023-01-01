@@ -286,18 +286,21 @@ function ReactFlowPro() {
   }
 
   const handleOnClickNode = (id) => {
-    setNodes((nodes) => {
-      return nodes.map(element => {
-        if (element.id === id) {
-          element.selected = true;
-        } else {
-          element.selected = false;
-        }
-        return element;
-      })
-    });
-    localStorage.setItem('selectedNodeId', id);
-    createPlaceholders(id);
+    const selectedNodeId = localStorage.getItem("selectedNodeId");
+    if (selectedNodeId !== id) {
+      setNodes((nodes) => {
+        return nodes.map(element => {
+          if (element.id === id) {
+            element.selected = true;
+          } else {
+            element.selected = false;
+          }
+          return element;
+        })
+      });
+      localStorage.setItem('selectedNodeId', id);
+      createPlaceholders(id);
+    }
   }
 
   const handleOnBlur = () => {
@@ -337,6 +340,9 @@ function ReactFlowPro() {
                 zoomOnDoubleClick={false}
                 deleteKeyCode={null}
                 onPaneClick={handleOnBlur}
+                disableKeyboardA11y={true}
+                nodesFocusable={false}
+
               >
                 <Background color="#aaa" gap={16} />
               </ReactFlow>
