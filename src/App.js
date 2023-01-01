@@ -9,7 +9,7 @@
  *
  * The graph elements are added via hook calls in the custom nodes and edges. The layout is calculated every time the graph changes (see hooks/useLayout.ts).
  **/
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import ReactFlow, {
   addEdge, Background, getOutgoers, ReactFlowProvider, useKeyPress, useReactFlow
 } from 'reactflow';
@@ -38,9 +38,17 @@ const fitViewOptions = {
   padding: 0.95,
 };
 
+//create your forceUpdate hook
+function useForceUpdate() {
+  const [value, setValue] = useState(0); // integer state
+  return () => setValue(value => value + 1); // update state to force render
+  // An function that increment 👆🏻 the previous state like here 
+  // is better than directly setting `value + 1`
+}
+
 function ReactFlowPro() {
   const { setEdges, setNodes, getNodes, getEdges, getNode } = useReactFlow();
-
+  const forceUpdate = useForceUpdate();
   const backSpacePresses = useKeyPress(["Backspace", "Delete"]);
   const enterPressed = useKeyPress(['Enter']);
   const tabPressed = useKeyPress(['Tab']);
@@ -273,7 +281,7 @@ function ReactFlowPro() {
     setEdges((edges) =>
       edges.filter((edge) => !existingPlaceholders.includes(edge.target)).concat([...edgesToAdd])
     );
-
+    forceUpdate();
   }
 
   const handleOnClickNode = (id) => {

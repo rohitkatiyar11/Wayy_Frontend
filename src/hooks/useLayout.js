@@ -120,7 +120,7 @@ function useLayout() {
     return () => {
       t.stop();
     };
-  }, [nodeCount, getEdges, getNodes, getNode, setNodes, fitView, setEdges]);
+  }, [nodeCount, getEdges, getNodes, getNode, setNodes, fitView, setEdges, localStorage.getItem("selectedNodeId")]);
 }
 
 export default useLayout;
