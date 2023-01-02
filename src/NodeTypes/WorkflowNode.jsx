@@ -17,6 +17,11 @@ const WorkflowNode = ({ id, data, selected }) => {
   const [showList, setShowList] = useState(false);
   const { setEdges, setNodes, getNodes, getEdges, getNode } = useReactFlow();
 
+
+  useEffect(() => {
+    setLabel("")
+  }, [localStorage.getItem("selectedNodeId")])
+
   // see the hook implementation for details of the click handler
   // calling onClick adds a child node to this node
   const onClick = useNodeClickHandler(id);
@@ -69,7 +74,6 @@ const WorkflowNode = ({ id, data, selected }) => {
   }, [selected]);
 
   useEffect(() => {
-    console.log('pressong editable')
     if (aPressed) {
       setLabel((label) => label + "a");
       setIsEditable(selected)
@@ -180,14 +184,6 @@ const WorkflowNode = ({ id, data, selected }) => {
 
   }, [aPressed, bPressed, cPressed, dPressed, ePressed, fPressed, gPressed, hPressed, iPressed, jPressed, kPressed, lPressed, mPressed, nPressed, oPressed, pPressed, qPressed, rPressed, sPressed, tPressed, uPressed, vPressed, wPressed, xPressed, yPressed, zPressed, Presse1, Presse2, Presse3, Presse4, Presse5, Presse6, Presse7, Presse8, Presse9]);
 
-  // useEffect(() => {
-  //   if (bPressed) {
-  //     setLabel((label) => label + "b");
-  //     setIsEditable(selected)
-  //   }
-  //   inputRef && inputRef.current && inputRef.current.focus();
-  // }, [bPressed]);
-
   useEffect(() => {
     if (arrowPresses) {
       setShowList((showList) => selected && !showList);
@@ -216,6 +212,14 @@ const WorkflowNode = ({ id, data, selected }) => {
     setLabel(e.target.value);
   }
 
+  const debounce = (func, timeout = 250) => {
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => { func.apply(this, args); }, timeout);
+    };
+  }
+
   const handleLabelBlur = () => {
     const nodes = getNodes();
     nodes.forEach(element => {
@@ -227,93 +231,11 @@ const WorkflowNode = ({ id, data, selected }) => {
     setIsEditable(false);
   }
 
-  const handleNodeCreation = (id) => {
-    const parentNode = getNode(id);
-    if (!parentNode) {
-      return;
-    }
-
-    // create a unique id for the child node
-    const childNodeId = uuid();
-
-    // create a unique id for the placeholder (the placeholder gets added to the new child node)
-    const childPlaceholderId = uuid();
-
-    // create the child node
-    const childNode = {
-      id: childNodeId,
-      // we try to place the child node close to the calculated position from the layout algorithm
-      // 150 pixels below the parent node, this spacing can be adjusted in the useLayout hook
-      position: { x: parentNode.position.x, y: parentNode.position.y + 150 },
-      type: 'workflow',
-      // data: { label: randomLabel() },
-      data: {
-        label: "", list: (
-          <List data={[{ text: "Daily Run", status: "pending" }, { text: "Finish 10K", status: "completed" }]} />
-        ),
-      },
-      selected: true
-    };
-
-    // create a placeholder for the new child node
-    // we want to display a placeholder for all workflow nodes that do not have a child already
-    // as the newly created node will not have a child, it gets this placeholder
-    const childPlaceholderNode = {
-      id: childPlaceholderId,
-      // we place the placeholder 150 pixels below the child node, spacing can be adjusted in the useLayout hook
-      position: { x: childNode.position.x, y: childNode.position.y + 150 },
-      type: 'placeholder',
-      data: { label: '+' },
-    };
-
-    // we need to create a connection from parent to child
-    const childEdge = {
-      id: `${parentNode.id}=>${childNodeId}`,
-      source: parentNode.id,
-      target: childNodeId,
-      type: 'workflow',
-    };
-
-    // we need to create a connection from child to our placeholder
-    const childPlaceholderEdge = {
-      id: `${childNodeId}=>${childPlaceholderId}`,
-      source: childNodeId,
-      target: childPlaceholderId,
-      type: 'placeholder',
-    };
-
-    // if the clicked node has had any placeholders as children, we remove them because it will get a child now
-    const existingPlaceholders = getOutgoers(parentNode, getNodes(), getEdges())
-      .filter((node) => node.type === 'placeholder')
-      .map((node) => node.id);
-
-    // add the new nodes (child and placeholder), filter out the existing placeholder nodes of the clicked node
-    setNodes((nodes) =>
-      nodes.map(nd => {
-        nd.selected = false;
-        return nd;
-      }).filter((node) => !existingPlaceholders.includes(node.id)).concat([childNode, childPlaceholderNode])
-    );
-
-    // add the new edges (node -> child, child -> placeholder), filter out any placeholder edges
-    setEdges((edges) =>
-      edges.filter((edge) => !existingPlaceholders.includes(edge.target)).concat([childEdge, childPlaceholderEdge])
-    );
-  }
-
   const _handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      handleLabelBlur()
-      e.preventDefault();
-      //setIsEditable(false);
-      //onClick();
+      debounce(() => handleLabelBlur())()
     } else if (e.key === 'Tab') {
-      handleLabelBlur()
-      // const edges = getEdges();
-      // const targetEdge = edges.find(({ target }) => id === target);
-      // if (targetEdge) {
-      //   handleNodeCreation(targetEdge.source);
-      // }
+      //handleLabelBlur()
       e.preventDefault();
     }
   }

@@ -52,6 +52,59 @@ function ReactFlowPro() {
   const backSpacePresses = useKeyPress(["Backspace", "Delete"]);
   const enterPressed = useKeyPress(['Enter']);
   const tabPressed = useKeyPress(['Tab']);
+  const arrowPressUp = useKeyPress(["ArrowUp"]);
+  const arrowPresseDown = useKeyPress(["ArrowDown"]);
+  const arrowPressRight = useKeyPress(["ArrowRight"]);
+  const arrowPresseLeft = useKeyPress(["ArrowLeft"]);
+
+  const debounce = (func, timeout = 250) => {
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => { func.apply(this, args); }, timeout);
+    };
+  }
+
+  useEffect(() => {
+    const nodes = getNodes();
+    const edges = getEdges();
+    const selectedNodeId = localStorage.getItem("selectedNodeId");
+    if (!selectedNodeId) return;
+    if (arrowPresseDown) {
+      const targets = edges.filter(e => e.source === selectedNodeId).map(({ target }) => target);
+      if (targets?.length) {
+        const nextEligibleNodes = nodes.filter(n => !!targets.includes(n.id) && n.type === "workflow").sort((a, b) => a.position.x - b.position.x);
+        const nextNode = nextEligibleNodes[0]
+        nextNode && debounce(() => handleOnClickNode(nextNode.id))();
+      }
+    } else if (arrowPressUp) {
+      const target = edges.find(e => e.target === selectedNodeId);
+      if (target) {
+        debounce(() => handleOnClickNode(target.source))();
+      }
+    } else if (arrowPressRight) {
+      const parentId = edges.find(e => e.target === selectedNodeId)?.source;
+      if (!parentId) return;
+      const targets = edges.filter(e => e.source === parentId).map(({ target }) => target);
+      if (targets?.length) {
+        const nextEligibleNodes = nodes.filter(n => !!targets.includes(n.id) && n.type === "workflow").sort((a, b) => a.position.x - b.position.x);
+        const selectedIndex = nextEligibleNodes.findIndex(ne => ne.id === selectedNodeId);
+        const nextNode = nextEligibleNodes[selectedIndex + 1]
+        nextNode && debounce(() => handleOnClickNode(nextNode.id))();
+      }
+    } else if (arrowPresseLeft) {
+      const parentId = edges.find(e => e.target === selectedNodeId)?.source;
+      if (!parentId) return;
+      const targets = edges.filter(e => e.source === parentId).map(({ target }) => target);
+      if (targets?.length) {
+        const nextEligibleNodes = nodes.filter(n => !!targets.includes(n.id) && n.type === "workflow").sort((a, b) => a.position.x - b.position.x);
+        const selectedIndex = nextEligibleNodes.findIndex(ne => ne.id === selectedNodeId);
+        const nextNode = nextEligibleNodes[selectedIndex - 1]
+        nextNode && debounce(() => handleOnClickNode(nextNode.id))();
+      }
+    }
+
+  }, [arrowPressUp, arrowPressRight, arrowPresseDown, arrowPresseLeft])
 
   useEffect(() => {
     localStorage.setItem('selectedNodeId', "1");
@@ -275,7 +328,14 @@ function ReactFlowPro() {
 
     // add the new nodes (child and placeholder), filter out the existing placeholder nodes of the clicked node
     setNodes((nodes) =>
-      nodes.filter((node) => !existingPlaceholders.includes(node.id)).concat([...nodesToAdd])
+      nodes.map(element => {
+        if (element.id === id) {
+          element.selected = true;
+        } else {
+          element.selected = false;
+        }
+        return element;
+      }).filter((node) => !existingPlaceholders.includes(node.id)).concat([...nodesToAdd])
     );
 
     // add the new edges (node -> child, child -> placeholder), filter out any placeholder edges
@@ -288,16 +348,6 @@ function ReactFlowPro() {
   const handleOnClickNode = (id) => {
     const selectedNodeId = localStorage.getItem("selectedNodeId");
     if (selectedNodeId !== id) {
-      setNodes((nodes) => {
-        return nodes.map(element => {
-          if (element.id === id) {
-            element.selected = true;
-          } else {
-            element.selected = false;
-          }
-          return element;
-        })
-      });
       localStorage.setItem('selectedNodeId', id);
       createPlaceholders(id);
     }
