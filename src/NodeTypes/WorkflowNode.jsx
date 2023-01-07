@@ -17,9 +17,8 @@ const WorkflowNode = ({ id, data, selected }) => {
   const [showList, setShowList] = useState(false);
   const { setEdges, setNodes, getNodes, getEdges, getNode } = useReactFlow();
 
-
   useEffect(() => {
-    setLabel("")
+    setLabel(data.label)
   }, [localStorage.getItem("selectedNodeId")])
 
   // see the hook implementation for details of the click handler

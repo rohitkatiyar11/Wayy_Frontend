@@ -45,58 +45,40 @@ function useLayout() {
   const { getNodes, getNode, setNodes, setEdges, getEdges, fitView } = useReactFlow();
 
   useEffect(() => {
-    // get the current nodes and edges
-    const nodes = getNodes();
-    const edges = getEdges();
+    try {
+      // get the current nodes and edges
+      const nodes = getNodes();
+      const edges = getEdges();
 
-    // run the layout and get back the nodes with their updated positions
-    const targetNodes = layoutNodes(nodes, edges);
+      // run the layout and get back the nodes with their updated positions
+      const targetNodes = layoutNodes(nodes, edges);
 
-    // if you do not want to animate the nodes, you can uncomment the following line
-    // return setNodes(targetNodes);
+      // if you do not want to animate the nodes, you can uncomment the following line
+      // return setNodes(targetNodes);
 
-    // to interpolate and animate the new positions, we create objects that contain the current and target position of each node
-    const transitions = targetNodes.map((node) => {
-      return {
-        id: node.id,
-        // this is where the node currently is placed
-        from: getNode(node.id)?.position || node.position,
-        // this is where we want the node to be placed
-        to: node.position,
-        node,
-      };
-    });
-
-    // create a timer to animate the nodes to their new positions
-    const t = timer((elapsed) => {
-      const s = elapsed / options.duration;
-
-      const currNodes = transitions.map(({ node, from, to }) => {
+      // to interpolate and animate the new positions, we create objects that contain the current and target position of each node
+      const transitions = targetNodes.map((node) => {
         return {
           id: node.id,
-          position: {
-            // simple linear interpolation
-            x: from.x + (to.x - from.x) * s,
-            y: from.y + (to.y - from.y) * s,
-          },
-          data: { ...node.data },
-          type: node.type,
-          selected: node.selected
+          // this is where the node currently is placed
+          from: getNode(node.id)?.position || node.position,
+          // this is where we want the node to be placed
+          to: node.position,
+          node,
         };
       });
 
-      setNodes(currNodes);
+      // create a timer to animate the nodes to their new positions
+      const t = timer((elapsed) => {
+        const s = elapsed / options.duration;
 
-      // this is the final step of the animation
-      if (elapsed > options.duration) {
-        // we are moving the nodes to their destination
-        // this needs to happen to avoid glitches
-        const finalNodes = transitions.map(({ node, to }) => {
+        const currNodes = transitions.map(({ node, from, to }) => {
           return {
             id: node.id,
             position: {
-              x: to.x,
-              y: to.y,
+              // simple linear interpolation
+              x: from.x + (to.x - from.x) * s,
+              y: from.y + (to.y - from.y) * s,
             },
             data: { ...node.data },
             type: node.type,
@@ -104,22 +86,43 @@ function useLayout() {
           };
         });
 
-        setNodes(finalNodes);
+        setNodes(currNodes);
 
-        // stop the animation
-        t.stop();
+        // this is the final step of the animation
+        if (elapsed > options.duration) {
+          // we are moving the nodes to their destination
+          // this needs to happen to avoid glitches
+          const finalNodes = transitions.map(({ node, to }) => {
+            return {
+              id: node.id,
+              position: {
+                x: to.x,
+                y: to.y,
+              },
+              data: { ...node.data },
+              type: node.type,
+              selected: node.selected
+            };
+          });
 
-        // in the first run, fit the view
-        if (!initial.current) {
-          fitView({ duration: 200, padding: 0.2 });
+          setNodes(finalNodes);
+
+          // stop the animation
+          t.stop();
+
+          // in the first run, fit the view
+          if (!initial.current) {
+            fitView({ duration: 200, padding: 0.2 });
+          }
+          initial.current = false;
         }
-        initial.current = false;
-      }
-    });
-
-    return () => {
-      t.stop();
-    };
+      });
+      return () => {
+        t.stop();
+      };
+    } catch {
+      //alert("failed")
+    }
   }, [nodeCount, getEdges, getNodes, getNode, setNodes, fitView, setEdges, localStorage.getItem("selectedNodeId")]);
 }
 
